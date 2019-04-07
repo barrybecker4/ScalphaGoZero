@@ -1,12 +1,11 @@
 package org.deeplearning4j.scalphagozero.demo
 
-import java.util.Scanner
-
 import org.deeplearning4j.scalphagozero.agents.{ HumanAgent, ZeroAgent }
 import org.deeplearning4j.scalphagozero.encoders.ZeroEncoder
 import org.deeplearning4j.scalphagozero.experience.ZeroExperienceBuffer
 import org.deeplearning4j.scalphagozero.models.DualResnetModel
 import org.deeplearning4j.scalphagozero.simulation.ZeroSimulator
+import org.deeplearning4j.scalphagozero.util.Input
 
 /**
   * Main demo of the project. Creates two opponents, a black and a white
@@ -23,6 +22,7 @@ import org.deeplearning4j.scalphagozero.simulation.ZeroSimulator
 object ScalphaGoZero {
 
   def main(args: Array[String]): Unit = {
+    val input = new Input()
 
     // Define board encoder and model
     val encoder = ZeroEncoder(9)
@@ -32,7 +32,9 @@ object ScalphaGoZero {
     val blackAgent = new ZeroAgent(model, encoder)
     val whiteAgent = new ZeroAgent(model, encoder)
 
-    val episodes = getNumEpisodes
+    println("How many episodes should we run for? [5]")
+    val episodes = input.getNumber(5, 1, 100).toInt
+    println("episodes = " + episodes)
 
     // Run some simulations...
     for (_ <- 0 until episodes)
@@ -49,14 +51,6 @@ object ScalphaGoZero {
     println(">>> Training phase done! You can use black to play as an AI agent now.")
     val humanAgent = new HumanAgent()
     ZeroSimulator.simulateGame(blackAgent, humanAgent, blackAgent.encoder.boardSize)
-  }
-
-  private def getNumEpisodes: Int = {
-    println("How many episodes should we run for?")
-    val scanner = new Scanner(System.in)
-    val num = scanner.nextInt()
-    println(num)
-    num
   }
 
 }
