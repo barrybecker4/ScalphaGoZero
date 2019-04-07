@@ -1,6 +1,8 @@
 package org.deeplearning4j.scalphagozero.demo
 
-import org.deeplearning4j.scalphagozero.agents.ZeroAgent
+import java.util.Scanner
+
+import org.deeplearning4j.scalphagozero.agents.{ HumanAgent, ZeroAgent }
 import org.deeplearning4j.scalphagozero.encoders.ZeroEncoder
 import org.deeplearning4j.scalphagozero.experience.ZeroExperienceBuffer
 import org.deeplearning4j.scalphagozero.models.DualResnetModel
@@ -23,23 +25,36 @@ object ScalphaGoZero {
   def main(args: Array[String]): Unit = {
 
     // Define board encoder and model
-    val encoder = ZeroEncoder(19)
-    val model = DualResnetModel(20, encoder.numPlanes, encoder.boardSize)
+    val encoder = ZeroEncoder(9)
+    val model = DualResnetModel(5, encoder.numPlanes, encoder.boardSize)
 
     // Create two AGZ opponents
     val blackAgent = new ZeroAgent(model, encoder)
     val whiteAgent = new ZeroAgent(model, encoder)
 
+    val episodes = getNumEpisodes
+
     // Run some simulations...
-    for (_ <- 0 until 5)
-      ZeroSimulator.simulateGame(blackAgent, whiteAgent)
+    for (_ <- 0 until episodes)
+      ZeroSimulator.simulateLearningGame(blackAgent, whiteAgent)
 
     // ... and collect the joint experience
     val experience = ZeroExperienceBuffer.combineExperience(List(blackAgent.collector, whiteAgent.collector))
 
     // Use experience data to train one of the agents.
     blackAgent.train(experience)
-    println(">>> Training phase done! You can use black agent to play now")
+
+    println(">>> Training phase done! You can use black to play as an AI agent now")
+    val humanAgent = new HumanAgent()
+    ZeroSimulator.simulateGame(blackAgent, humanAgent, blackAgent.encoder.boardSize)
+  }
+
+  private def getNumEpisodes: Int = {
+    println("How many episodes should we run for?")
+    val scanner = new Scanner(System.in)
+    val num = scanner.nextInt()
+    println(num)
+    num
   }
 
 }
