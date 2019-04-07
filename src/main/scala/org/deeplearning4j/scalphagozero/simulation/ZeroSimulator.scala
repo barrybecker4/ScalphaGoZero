@@ -20,7 +20,7 @@ object ZeroSimulator {
     game = doSimulation(game, agents)
 
     val gameResult = GameResult.computeGameResult(game.board)
-    println(gameResult)
+    println(gameResult.toDebugString)
   }
 
   def simulateLearningGame(blackAgent: ZeroAgent, whiteAgent: ZeroAgent): Unit = {

@@ -37,14 +37,16 @@ object ScalphaGoZero {
     // Run some simulations...
     for (_ <- 0 until episodes)
       ZeroSimulator.simulateLearningGame(blackAgent, whiteAgent)
+    println(">>> Now combining experience from self-play.")
 
     // ... and collect the joint experience
     val experience = ZeroExperienceBuffer.combineExperience(List(blackAgent.collector, whiteAgent.collector))
 
     // Use experience data to train one of the agents.
+    println(">>> Now using that experience to train the deep neural net.")
     blackAgent.train(experience)
 
-    println(">>> Training phase done! You can use black to play as an AI agent now")
+    println(">>> Training phase done! You can use black to play as an AI agent now.")
     val humanAgent = new HumanAgent()
     ZeroSimulator.simulateGame(blackAgent, humanAgent, blackAgent.encoder.boardSize)
   }

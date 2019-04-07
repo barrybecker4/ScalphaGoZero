@@ -57,11 +57,4 @@ class HumanAgent() extends Agent {
 
 object HumanAgent {
   private val INT_REGEX = """(\d+)""".r
-
-  def main(args: Array[String]): Unit = {
-    val agent = new HumanAgent()
-    val gameState = new GameState(GoBoard(9), BlackPlayer)
-    val move = agent.selectMove(gameState)
-    println(move)
-  }
 }

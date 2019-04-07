@@ -31,11 +31,19 @@ final case class GameResult(
   /**
     * points white scored
     */
-  val whitePoints: Int = numWhiteStones + numWhiteStones
+  val whitePoints: Int = numWhiteTerritory + numWhiteStones
 
   val winner: Player = if (blackPoints > whitePoints + komi) BlackPlayer else WhitePlayer
 
   val winningMargin: Double = Math.abs(blackPoints - (whitePoints + komi))
+
+  def toDebugString: String = {
+    var s = s"blackTerritory ($numBlackTerritory) + blackStones ($numBlackStones) = $blackPoints\n"
+    s += s"whiteTerritory ($numWhiteTerritory) + blackStones ($numWhiteStones) = $whitePoints\n"
+    s += s"num dame = $numDame,  kome = $komi\n"
+    s += toString
+    s
+  }
 
   override lazy val toString: String = {
     val white = whitePoints + komi
