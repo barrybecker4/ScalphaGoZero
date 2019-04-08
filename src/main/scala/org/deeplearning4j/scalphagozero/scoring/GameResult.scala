@@ -49,8 +49,8 @@ final case class GameResult(
 
   override lazy val toString: String = {
     winner match {
-      case BlackPlayer => "B+ " + blackWinningMargin
-      case WhitePlayer => "W+ " + -blackWinningMargin
+      case BlackPlayer => "Black +" + blackWinningMargin
+      case WhitePlayer => "White +" + -blackWinningMargin
     }
   }
 }

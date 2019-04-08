@@ -155,14 +155,5 @@ case class GoBoard(
 
   def getGoString(point: Point, myGrid: Map[Point, GoString] = grid): Option[GoString] = myGrid.get(point)
 
-  override def equals(obj: scala.Any): Boolean = {
-    obj match {
-      case other: GoBoard =>
-        return this.size == other.size && this.grid.equals(other.grid)
-      case _ =>
-    }
-    false
-  }
-
   override def toString: String = serializer.serialize()
 }
