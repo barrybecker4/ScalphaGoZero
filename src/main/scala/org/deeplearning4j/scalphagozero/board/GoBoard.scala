@@ -11,7 +11,13 @@ import ZobristHashing.ZOBRIST
   * @author Max Pumperla
   * @author Barry Becker
   */
-case class GoBoard(size: Int, grid: Map[Point, GoString] = Map(), hash: Long = 0L) {
+case class GoBoard(
+    size: Int,
+    grid: Map[Point, GoString] = Map.empty,
+    hash: Long = 0L,
+    blackCaptures: Int = 0,
+    whiteCaptures: Int = 0
+) {
 
   private val serializer = new GoBoardSerializer(this)
 
@@ -64,13 +70,19 @@ case class GoBoard(size: Int, grid: Map[Point, GoString] = Map(), hash: Long = 0
         } else stringsToRemove += otherString
       }
 
+      var newBlackCaptures = blackCaptures
+      var newWhiteCaptures = whiteCaptures
       stringsToRemove.foreach(str => {
+        player match {
+          case BlackPlayer => newBlackCaptures += str.size
+          case WhitePlayer => newWhiteCaptures += str.size
+        }
         val (nGrid, nHash) = removeString(str, newGrid, newHash)
         newGrid = nGrid
         newHash = nHash
       })
 
-      GoBoard(size, newGrid, newHash)
+      GoBoard(size, newGrid, newHash, newBlackCaptures, newWhiteCaptures)
     }
   }
 
