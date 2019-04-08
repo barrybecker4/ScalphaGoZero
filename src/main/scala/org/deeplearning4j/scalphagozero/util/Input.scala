@@ -27,8 +27,8 @@ class Input {
     } while (!valid)
 
     text match {
-      case "P" => Move.Pass
-      case "R" => Move.Resign
+      case "P" | "p" => Move.Pass
+      case "R" | "r" => Move.Resign
       case s: String =>
         val a = s.split(',')
         Move.Play(Point(a(0).trim.toInt, a(1).trim.toInt))

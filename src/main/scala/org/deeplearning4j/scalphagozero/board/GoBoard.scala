@@ -128,6 +128,7 @@ case class GoBoard(size: Int, grid: Map[Point, GoString] = Map(), hash: Long = 0
     friendlyStrings.forall(_.numLiberties == 1)
   }
 
+  /** @return true if player playing at point will capture stones */
   def willCapture(player: Player, point: Point): Boolean =
     neighborMap(point).exists {
       getGoString(_) match {

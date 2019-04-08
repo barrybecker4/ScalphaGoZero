@@ -70,7 +70,7 @@ class GameState(
     move match {
       case Move.Play(point) if board.willCapture(player, point) =>
         nextBoard = nextBoard.placeStone(player, point)
-        val nextSituation = (player.other, nextBoard.hash)
+        val nextSituation = player -> nextBoard.hash
         allPreviousStates.contains(nextSituation)
       case _ => false
     }
