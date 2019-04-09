@@ -55,6 +55,13 @@ class Input {
     result > 0
   }
 
+  def getInteger(prompt: String, default: Int = 0, min: Int = 0, max: Int = 10000: Int): Int = {
+    println(prompt + s" [$default]")
+    val n = getNumber(default.toDouble, min.toDouble, max.toDouble).toInt
+    println(n)
+    n
+  }
+
   /**
     * @param default default value to use if one not provided
     * @param min minimum allowed
@@ -62,7 +69,6 @@ class Input {
     * @return the user specified number.
     */
   def getNumber(default: Double, min: Double, max: Double): Double = {
-    print(s"[${default.toFloat}]")
     var answer = scanner.nextLine()
     if (answer.isEmpty) default
     else {
