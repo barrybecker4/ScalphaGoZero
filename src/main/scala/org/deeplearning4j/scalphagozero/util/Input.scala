@@ -3,7 +3,7 @@ package org.deeplearning4j.scalphagozero.util
 import java.util.Scanner
 
 import org.deeplearning4j.scalphagozero.board.{ Move, Point }
-import org.deeplearning4j.scalphagozero.util.Input.INT_REGEX
+import org.deeplearning4j.scalphagozero.util.Input.{ INT_REGEX, letterToInt }
 
 /**
   * Some convenience methods for gathering input from the user
@@ -14,8 +14,8 @@ class Input {
 
   private val scanner: Scanner = new Scanner(System.in)
 
-  def getMoveFromUser: Move = {
-    println("Enter the coordinates (row, col) of where you would like to play (or P to pass, and R to resign): ")
+  def getMoveFromUser(size: Int): Move = {
+    println("Enter the coordinates (row,col) of where you would like to play (or P to pass, and R to resign): ")
     var text: String = ""
     var valid = false
     do {
@@ -31,7 +31,7 @@ class Input {
       case "R" | "r" => Move.Resign
       case s: String =>
         val a = s.split(',')
-        Move.Play(Point(a(0).trim.toInt, a(1).trim.toInt))
+        Move.Play(Point(size + 1 - a(0).trim.toInt, letterToInt(a(1).trim)))
     }
   }
 
@@ -42,7 +42,7 @@ class Input {
     if (text.contains(",")) {
       val a = text.split(',')
       println("first = " + a(0) + " second = " + a(1))
-      return validInt(a(0)) && validInt(a(1))
+      return validInt(a(0)) && validChar(a(1))
     }
     false
   }
@@ -54,6 +54,8 @@ class Input {
     }
     result > 0
   }
+
+  private def validChar(txt: String): Boolean = letterToInt(txt) >= 0
 
   def getInteger(prompt: String, default: Int = 0, min: Int = 0, max: Int = 10000: Int): Int = {
     println(prompt + s" [$default]")
@@ -94,4 +96,6 @@ class Input {
 
 object Input {
   private val INT_REGEX = """(\d+)""".r
+  private def letterToInt(c: String): Int =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(c.substring(0).toUpperCase()) + 1
 }
