@@ -24,7 +24,7 @@ import ZeroAgent.RND
 class ZeroAgent(
     val model: ComputationGraph,
     val encoder: ZeroEncoder,
-    val roundsPerMove: Int = 10,
+    val roundsPerMove: Int = 20,
     val c: Double = 2.0,
     val rand: Random = RND
 ) extends Agent {
@@ -62,7 +62,11 @@ class ZeroAgent(
     collector.recordDecision(rootStateTensor, visitCounts)
 
     val validMoves = root.moves.filter(m => gameState.isValidMove(m))
-    selectValidNextMove(validMoves, root)
+    val selected = selectValidNextMove(validMoves, root)
+    println("totalVisitCt = " + root.totalVisitCount)
+    println("Selected " + selected + " from these valid moves:  ")
+    println(validMoves.map(m => (m, root.visitCount(m))).mkString(", "))
+    selected
   }
 
   /**
@@ -92,8 +96,9 @@ class ZeroAgent(
   def selectBranch(node: ZeroTreeNode): Move = {
     val totalCount = node.totalVisitCount
 
+    // this is the exploration versus exploitation formula explained on page 81 of DL and the Game of Go.
     def scoreBranch(move: Move): Double = {
-      val q = node.expectedValue(move)
+      val q = node.expectedValue(move) // ratio of wins to losses for this node
       val p = node.prior(move)
       val n = node.visitCount(move)
       q + this.c * p * Math.sqrt(totalCount.doubleValue()) / (n + 1)
@@ -131,7 +136,7 @@ class ZeroAgent(
       movePriors += (move -> prior)
     }
 
-    val newNode = ZeroTreeNode(gameState, value, movePriors, parent, move)
+    val newNode = new ZeroTreeNode(gameState, value, movePriors, parent, move)
     if (parent.isDefined && move.isDefined) {
       parent.get.addChild(move.get, newNode)
     }

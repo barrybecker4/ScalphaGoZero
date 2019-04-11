@@ -8,16 +8,12 @@ import org.deeplearning4j.scalphagozero.board.{ GameState, Move }
   * @param gameState current game state
   * @param value value of this node
   * @param priors Map of moves to prior values (estimated by policy network)
-  * @param parent optional parent of this node
-  * @param lastMove optional last played move
+  * @param parent optional parent of this node. All nodes have parents except the root.
+  * @param lastMove optional last played move that led directly to the game state represented by this node.
   */
-case class ZeroTreeNode(
-    gameState: GameState,
-    value: Double,
-    priors: Map[Move, Double],
-    parent: Option[ZeroTreeNode],
-    lastMove: Option[Move]
-) {
+class ZeroTreeNode(val gameState: GameState, val value: Double,
+                   priors: Map[Move, Double], parent: Option[ZeroTreeNode],
+                   val lastMove: Option[Move]) {
 
   var totalVisitCount: Int = 1
 
